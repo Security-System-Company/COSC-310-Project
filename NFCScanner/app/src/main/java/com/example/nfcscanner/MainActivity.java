@@ -22,6 +22,20 @@ import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+
+import android.os.StrictMode;
+import android.util.Log;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     TextView nfc_contents;
     Button testButton;
+    Boolean access;
+    Calendar calendar;
+    SimpleDateFormat dateFormat;
+    Date fgh;
+    String date;
 
     //String and Int Variables to determine level of NFC Card emulated and Access level requested to enter
     String AccessLevelString, stringNFCContent;
@@ -42,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+      calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+        date = dateFormat.format(calendar.getTime());
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -60,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
         nfc_contents = findViewById(R.id.nfc_contents);
         testButton =  findViewById(R.id.testButton);
         context = this;
+        access = false;
+
+
+
 
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
     private void accessGranted(TextView textViewAccess) {
         //on successful access attempt, change "textViewAccess" to access granted and play animation
         textViewAccess.setText("ACCESS GRANTED");
-
+        access = true;
         //settings for animation
         Animation blink = new AlphaAnimation(0.f, 1.f);
         blink.setDuration(500);
@@ -203,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
     private void accessDenied(TextView textViewAccess) {
         //on unsuccessful access attempt, change "textViewAccess" to access denied and play animation
         textViewAccess.setText("ACCESS DENIED");
-
+        access = false;
         //settings for animation
         Animation blink = new AlphaAnimation(0.f, 1.f);
         blink.setDuration(500);
